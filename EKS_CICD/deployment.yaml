@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: stockapp
+    app.kubernetes.io/instance: stockapp-instance
+    app.kubernetes.io/version: '1.0.0'
+    app.kubernetes.io/managed-by: kubectl
+  name: stockapp-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stockapp
+  template:
+    metadata:
+      labels:
+        app: stockapp
+    spec:
+      containers:
+        - image: 362372332568.dkr.ecr.us-east-1.amazonaws.com/stockapp:latest
+          imagePullPolicy: Always
+          name: stockapp
+          ports:
+            - containerPort: 3000

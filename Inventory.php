@@ -1,8 +1,8 @@
 <?php
 class Inventory {
     private $host  = 'localhost';
-    private $user  = 'nipun';
-    private $password   = 'pswd';
+    private $user  = 'root';
+    private $password   = '';
     private $database  = 'ims_db';   
 	private $userTable = 'ims_user';	
     private $customerTable = 'ims_customer';

@@ -1,35 +1,25 @@
-version: '3.8'
+version: '3'
 services:
-    php-apache-environment:
-        container_name: php-apache
-        build:
-            context: ./
-            dockerfile: Dockerfile
-        depends_on:
-            - db
-        volumes:
-            - ./:/var/www/html/
-        ports:
-            - 8000:80
-    db:
-        container_name: db
-        image: mysql
-        restart: always
-        environment:
-            MYSQL_DATABASE: stockphp
-            MYSQL_USER: nipun
-            MYSQL_PASSWORD: pswd
-            MYSQL_ALLOW_EMPTY_PASSWORD: 1
-        ports:
-            - "9906:3306"
-        volumes:
-            - ./my-datavolume:/var/lib/mysql
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        ports:
-            - '8080:80'
-        restart: always
-        environment:
-            PMA_HOST: db
-        depends_on:
-            - db
+  db: 
+    image: mysql:latest
+    environment:
+      - MYSQL_DATABASE=ims_db
+      - MYSQL_USER=nipun
+      - MYSQL_PASSWORD=pswd # this should live in a env var
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1 # equivalent to True
+    volumes:
+      - "./db:/docker-entrypoint-initdb.d" # this is how we persist a sql db even when container stops
+  www:
+    image: php:apache
+    volumes:
+      - "./:/var/www/html" # sync the current dir on local machine to the dir of container
+    ports:
+      - 80:80
+      - 443:443 # for future ssl traffic
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8001:80
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
